@@ -44,6 +44,7 @@ public class Categoria {
 			produtos.remove(posicao);
 		}
 	}
+	
 
 	public Produto encontraProduto(int codigo) {
 		Produto produto = new Produto();

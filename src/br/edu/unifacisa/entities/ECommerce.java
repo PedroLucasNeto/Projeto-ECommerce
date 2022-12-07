@@ -5,14 +5,20 @@ import java.util.List;
 
 public class ECommerce {
 
-	private List<Usuario> usuarios = new ArrayList<>();
+	private List<Usuario> usuarios;
 
-	private List<Categoria> categorias = new ArrayList<>();
-	
-	private List<Produto> produtos = new ArrayList<>();
+	private List<Categoria> categorias;
+
+	private List<Produto> produtos;
+
+	private List<NotaFiscal> notas;
 
 	public ECommerce() {
 
+		this.usuarios = new ArrayList<>();
+		this.categorias = new ArrayList<>();
+		this.produtos = new ArrayList<>();
+		this.notas = new ArrayList<>();
 	}
 
 	public void listaCategoriasEProdutos() {
@@ -38,6 +44,14 @@ public class ECommerce {
 	public void adicionaUsuario(Usuario usuario) {
 		usuario.geraId();
 		usuarios.add(usuario);
+	}
+
+	public List<NotaFiscal> getNotas() {
+		return notas;
+	}
+
+	public void setNotas(NotaFiscal nota) {
+		this.notas.add(nota);
 	}
 
 //	public boolean autenticaUsuario(String login, String senha) {
@@ -68,6 +82,7 @@ public class ECommerce {
 		for (Categoria categoria : categorias) {
 			if (categoria.getNome().equalsIgnoreCase(nome)) {
 				categoria.excluiProduto(codigo);
+				this.excluiProdutoGeral(codigo);
 				produtoRemovido = true;
 				return produtoRemovido;
 			}
@@ -95,6 +110,19 @@ public class ECommerce {
 			produtos.addAll(categoria.getProdutos());
 		}
 		System.out.println(produtos);
-		
+
+	}
+	
+	public void excluiProdutoGeral(int codigo) {
+		int posicao = -1;
+
+		for (int i = 0; i < produtos.size(); i++) {
+			if (produtos.get(i).getId() == codigo) {
+				posicao = i;
+			}
+		}
+		if (posicao != -1) {
+			produtos.remove(posicao);
+		}
 	}
 }

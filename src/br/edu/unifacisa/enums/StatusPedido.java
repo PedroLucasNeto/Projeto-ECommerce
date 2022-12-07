@@ -1,4 +1,4 @@
-package br.edu.unifacisa.entities;
+package br.edu.unifacisa.enums;
 
 public enum StatusPedido {
 	

@@ -3,12 +3,15 @@ package br.edu.unifacisa.main;
 import java.util.Locale;
 import java.util.Scanner;
 
+import br.edu.unifacisa.entities.Administrador;
 import br.edu.unifacisa.entities.Categoria;
+import br.edu.unifacisa.entities.Cliente;
 import br.edu.unifacisa.entities.ECommerce;
 import br.edu.unifacisa.entities.Endereco;
 import br.edu.unifacisa.entities.Produto;
-import br.edu.unifacisa.entities.TipoUsuario;
 import br.edu.unifacisa.entities.Usuario;
+import br.edu.unifacisa.entities.Vendedor;
+import br.edu.unifacisa.enums.TipoUsuario;
 
 public class App {
 
@@ -17,11 +20,11 @@ public class App {
 		Scanner scanner = new Scanner(System.in);
 		Endereco endereco = new Endereco();
 		ECommerce ecommerce = new ECommerce();
-		Usuario administrador = new Usuario("Pedro", "ppneto", "1234", TipoUsuario.ADMINISTRADOR);
+		Usuario administrador = new Administrador("Joao", "ppneto", "1234", TipoUsuario.ADMINISTRADOR);
 		ecommerce.adicionaUsuario(administrador);
-		Usuario cliente = new Usuario("Joao", "ppneto1", "1234", TipoUsuario.CLIENTE);
+		Usuario cliente = new Cliente("Joao", "ppneto1", "1234", TipoUsuario.CLIENTE);
 		ecommerce.adicionaUsuario(cliente);
-		Usuario vendedor = new Usuario("Lucas", "ppneto2", "1234", TipoUsuario.VENDEDOR);
+		Usuario vendedor = new Vendedor("Lucas", "ppneto2", "1234", TipoUsuario.VENDEDOR);
 		ecommerce.adicionaUsuario(vendedor);
 		Categoria categoria1 = new Categoria("Carros");
 		ecommerce.adicionaCategoria(categoria1);
@@ -57,59 +60,89 @@ public class App {
 				System.out.println("Para cadastrar preencha o formulário com o que se pede:\n");
 				System.out.println("1-Cliente: \n2-Vendedor: ");
 				int vendedorOuCliente = Integer.parseInt(scanner.nextLine());
-				Usuario usuario = new Usuario();
+
 				if (vendedorOuCliente == 1) {
+
+					Usuario usuario = new Cliente();
+					
+					System.out.println("Nome:");
+					String nome = scanner.nextLine();
+					usuario.setNome(nome);
+					System.out.println("Login:");
+					usuario.setLogin(scanner.nextLine());
+					System.out.println("Senha:");
+					usuario.setSenha(scanner.nextLine());
+					System.out.println("--------Endereco--------\nRua:");
+					endereco.setRua(scanner.nextLine());
+					System.out.println("Numero:");
+					endereco.setNumero(Integer.parseInt(scanner.nextLine()));
+					System.out.println("Complemento:");
+					endereco.setComplemento(scanner.nextLine());
+
+					usuario.geraId();
 					usuario.setTipoUsuario(TipoUsuario.CLIENTE);
+					ecommerce.adicionaUsuario(usuario);
+
+					System.out.println("Seu perfil foi criado, confira seus dados:\n" + usuario);
+					temp = usuario;
+
+					entrada1 = 4;
+
 				} else if (vendedorOuCliente == 2) {
+					Usuario usuario = new Vendedor();
+					System.out.println("Nome:");
+
+					usuario.setNome(scanner.nextLine());
+					System.out.println("Login:");
+					usuario.setLogin(scanner.nextLine());
+					System.out.println("Senha:");
+					usuario.setSenha(scanner.nextLine());
+					System.out.println("--------Endereco--------\nRua:");
+					endereco.setRua(scanner.nextLine());
+					System.out.println("Numero:");
+					endereco.setNumero(Integer.parseInt(scanner.nextLine()));
+					System.out.println("Complemento:");
+					endereco.setComplemento(scanner.nextLine());
+
+					usuario.geraId();
 					usuario.setTipoUsuario(TipoUsuario.VENDEDOR);
+					ecommerce.adicionaUsuario(usuario);
+
+					System.out.println("Seu perfil foi criado, confira seus dados:\n" + usuario);
+					temp = usuario;
+
+					entrada1 = 4;
+
 				} else {
 					System.out.println("Opção Inválida!");
 				}
-				System.out.println("Nome:");
-
-				usuario.setNome(scanner.nextLine());
-				System.out.println("Login:");
-				usuario.setLogin(scanner.nextLine());
-				System.out.println("Senha:");
-				usuario.setSenha(scanner.nextLine());
-				System.out.println("--------Endereco--------\nRua:");
-				endereco.setRua(scanner.nextLine());
-				System.out.println("Numero:");
-				endereco.setNumero(Integer.parseInt(scanner.nextLine()));
-				System.out.println("Complemento:");
-				endereco.setComplemento(scanner.nextLine());
-
-				usuario.geraId();
-				usuario.adicionaEndereco(endereco);
-
-				ecommerce.adicionaUsuario(usuario);
-
-				System.out.println("Seu perfil foi criado, confira seus dados:\n" + usuario);
-				temp = usuario;
-
-				entrada1 = 4;
 				break;
-
 			case 3:
 				System.out.println("Aplicação encerrada...\nObrigado por interagir!");
 				continua = false;
 				break;
 			case 4:
-				if (TipoUsuario.ADMINISTRADOR.equals(temp.getTipoUsuario())) {
+				if (temp.getTipoUsuario().equals(TipoUsuario.ADMINISTRADOR)) {
 					System.out.println("Você está logado como administrador.");
 					System.out.println(
 							"1-Listar Categorias:\n2-Listar Usuarios:\n3-Listar Todos os Produtos:\n4-Listar Produtos por Categoria\n5-Criar Categoria:\n6-Criar Produto:\n7-Excluir Produto"
 									+ "\n8-Sair.");
 					int menuAdm = Integer.parseInt(scanner.nextLine());
-					if (menuAdm == 1) {
+					switch (menuAdm) {
+					case 1:
 						ecommerce.listaCategorias();
-					} else if (menuAdm == 2) {
+						break;
+					case 2:
 						ecommerce.listaUsuarios();
-					} else if (menuAdm == 3) {
+						break;
+					case 3:
 						ecommerce.listaProdutos();
-					} else if (menuAdm == 4) {
+						break;
+
+					case 4:
 						ecommerce.listaCategoriasEProdutos();
-					} else if (menuAdm == 5) {
+						break;
+					case 5:
 						System.out.println("Qual o nome da categoria que deseja criar?");
 						categoria.setNome(scanner.nextLine());
 						ecommerce.adicionaCategoria(categoria);
@@ -127,12 +160,14 @@ public class App {
 							categoria.adicionaProdutoNaCategoria(produto);
 
 							System.out.println("Produto adicionado com sucesso!");
+
 						} else if (adiciona == 2) {
 							System.out.println("Ok!");
 						} else {
 							System.out.println("Opção inválida!");
 						}
-					} else if (menuAdm == 6) {
+						break;
+					case 6:
 						produto = new Produto();
 						System.out.println("Digite o nome do produto:");
 						produto.setDescricao(scanner.nextLine());
@@ -155,7 +190,8 @@ public class App {
 								tentaAdicionar = false;
 							}
 						}
-					} else if (menuAdm == 7) {
+						break;
+					case 7:
 						System.out.println("\n");
 						System.out.println("Em qual categoria está o produto que deseja remover?");
 						ecommerce.listaCategorias();
@@ -163,22 +199,24 @@ public class App {
 						System.out.println("Digite o ID do produto que deseja remover?");
 						int idProduto = Integer.parseInt(scanner.nextLine());
 						boolean removido = ecommerce.excluiProduto(nomeCategoria, idProduto);
-						
-						if(removido) {
+
+						if (removido) {
 							System.out.println("Produto removido com sucesso!");
-						}else {
+						} else {
 							System.out.println("Não foi possível remover produto, tente novamente!");
 						}
-							
-						
-					} else if (menuAdm == 8) {
+
+						break;
+					case 8:
 						System.out.println("Ok!");
 						continua = false;
+						break;
 					}
 
-				} else if (TipoUsuario.VENDEDOR.equals(temp.getTipoUsuario())) {
+				} else if (temp.getTipoUsuario().equals(TipoUsuario.VENDEDOR)) {
+					// TODO Criar menu de vendedor
 
-				} else {
+				} else if (temp.getTipoUsuario().equals(TipoUsuario.CLIENTE)) {
 					System.out.println("Você está logado com cliente;");
 					System.out.println(
 							"1-Ver Categorias:\n2-Ver Todos os produtos:\n3-Adicionar produto ao carrinho:\n4-Ver carrinho:\n5-Sair.");
@@ -200,6 +238,8 @@ public class App {
 						System.out.println("Opção inválida!");
 					}
 
+				} else {
+					System.out.println("Não foi possível identificar seu cadastro!");
 				}
 				break;
 
